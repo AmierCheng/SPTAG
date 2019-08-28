@@ -156,7 +156,7 @@ namespace SPTAG
 
 				return _mm256_cvtepi32_ps(_mm256_add_epi32(_mm256_madd_epi16(xlo, ylo), _mm256_madd_epi16(xhi, yhi)));
 			}
-			static inline __m256 _mm256_sqdf_epi8(__m256i X, __m256i Y)
+			static inline __m256 _mm256_sqdf_epu8(__m256i X, __m256i Y)
 			{
 				__m256i zero = _mm256_setzero_si256();
 
@@ -199,7 +199,7 @@ namespace SPTAG
 #endif
 /*
             template<typename T>
-            static float ComputeL2Distance(const T *pX, const T *pY, int length)
+            static float ComputeL2Distance(const T *pX, const T *pY, DimensionType length)
             {
                 float diff = 0;
                 const T* pEnd1 = pX + length;
@@ -217,7 +217,7 @@ namespace SPTAG
                 result = acc(result, exec(c1, c2)); \
             } \
 
-            static float ComputeL2Distance(const std::int8_t *pX, const std::int8_t *pY, int length)
+            static float ComputeL2Distance(const std::int8_t *pX, const std::int8_t *pY, DimensionType length)
             {
                 const std::int8_t* pEnd32 = pX + ((length >> 5) << 5);
                 const std::int8_t* pEnd16 = pX + ((length >> 4) << 4);
@@ -258,7 +258,7 @@ namespace SPTAG
                 return diff;
             }
 
-			static float ComputeL2Distance(const std::uint8_t *pX, const std::uint8_t *pY, int length)
+			static float ComputeL2Distance(const std::uint8_t *pX, const std::uint8_t *pY, DimensionType length)
 			{
 				const std::uint8_t* pEnd32 = pX + ((length >> 5) << 5);
 				const std::uint8_t* pEnd16 = pX + ((length >> 4) << 4);
@@ -299,7 +299,7 @@ namespace SPTAG
 				return diff;
 			}
 
-            static float ComputeL2Distance(const std::int16_t *pX, const std::int16_t *pY, int length)
+            static float ComputeL2Distance(const std::int16_t *pX, const std::int16_t *pY, DimensionType length)
             {
                 const std::int16_t* pEnd16 = pX + ((length >> 4) << 4);
                 const std::int16_t* pEnd8 = pX + ((length >> 3) << 3);
@@ -341,7 +341,7 @@ namespace SPTAG
                 return diff;
             }
 
-            static float ComputeL2Distance(const float *pX, const float *pY, int length)
+            static float ComputeL2Distance(const float *pX, const float *pY, DimensionType length)
             {
                 const float* pEnd16 = pX + ((length >> 4) << 4);
                 const float* pEnd4 = pX + ((length >> 2) << 2);
@@ -389,14 +389,14 @@ namespace SPTAG
             }
 /*
             template<typename T>
-            static float ComputeCosineDistance(const T *pX, const T *pY, int length) {
+            static float ComputeCosineDistance(const T *pX, const T *pY, DimensionType length) {
                 float diff = 0;
                 const T* pEnd1 = pX + length;
                 while (pX < pEnd1) diff += (*pX++) * (*pY++);
                 return 1 - diff;
             }
 */
-            static float ComputeCosineDistance(const std::int8_t *pX, const std::int8_t *pY, int length) {
+            static float ComputeCosineDistance(const std::int8_t *pX, const std::int8_t *pY, DimensionType length) {
                 const std::int8_t* pEnd32 = pX + ((length >> 5) << 5);
                 const std::int8_t* pEnd16 = pX + ((length >> 4) << 4);
                 const std::int8_t* pEnd4 = pX + ((length >> 2) << 2);
@@ -436,7 +436,7 @@ namespace SPTAG
                 return 16129 - diff;
             }
 
-			static float ComputeCosineDistance(const std::uint8_t *pX, const std::uint8_t *pY, int length) {
+			static float ComputeCosineDistance(const std::uint8_t *pX, const std::uint8_t *pY, DimensionType length) {
 				const std::uint8_t* pEnd32 = pX + ((length >> 5) << 5);
 				const std::uint8_t* pEnd16 = pX + ((length >> 4) << 4);
 				const std::uint8_t* pEnd4 = pX + ((length >> 2) << 2);
@@ -473,10 +473,10 @@ namespace SPTAG
 					c1 = ((float)(*pX++) * (float)(*pY++)); diff += c1;
 				}
 				while (pX < pEnd1) diff += ((float)(*pX++) * (float)(*pY++));
-				return 16129 - diff;
+				return 65025 - diff;
 			}
 
-            static float ComputeCosineDistance(const std::int16_t *pX, const std::int16_t *pY, int length) {
+	static float ComputeCosineDistance(const std::int16_t *pX, const std::int16_t *pY, DimensionType length) {
                 const std::int16_t* pEnd16 = pX + ((length >> 4) << 4);
                 const std::int16_t* pEnd8 = pX + ((length >> 3) << 3);
                 const std::int16_t* pEnd4 = pX + ((length >> 2) << 2);
@@ -517,7 +517,7 @@ namespace SPTAG
                 return  1073676289 - diff;
             }
 
-            static float ComputeCosineDistance(const float *pX, const float *pY, int length) {
+            static float ComputeCosineDistance(const float *pX, const float *pY, DimensionType length) {
                 const float* pEnd16 = pX + ((length >> 4) << 4);
                 const float* pEnd4 = pX + ((length >> 2) << 2);
                 const float* pEnd1 = pX + length;
@@ -564,7 +564,7 @@ namespace SPTAG
             }
 
             template<typename T>
-            static inline float ComputeDistance(const T *p1, const T *p2, int length, SPTAG::DistCalcMethod distCalcMethod)
+            static inline float ComputeDistance(const T *p1, const T *p2, DimensionType length, SPTAG::DistCalcMethod distCalcMethod)
             {
                 if (distCalcMethod == SPTAG::DistCalcMethod::L2)
                     return ComputeL2Distance(p1, p2, length);
@@ -588,7 +588,7 @@ namespace SPTAG
 
 
         template<typename T>
-        float (*DistanceCalcSelector(SPTAG::DistCalcMethod p_method)) (const T*, const T*, int)
+        float (*DistanceCalcSelector(SPTAG::DistCalcMethod p_method)) (const T*, const T*, DimensionType)
         {
             switch (p_method)
             {
